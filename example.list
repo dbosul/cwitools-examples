@@ -2,11 +2,11 @@ CWITools cube ID list
 ---------------
 
 # Where to load initial raw PCWI or KCWI data cubes
-INPUT_DIRECTORY = ./example_input/
+INPUT_DIRECTORY = ./sample_data/
 SEARCH_DEPTH =  1
 
-# Where to store main output
-OUTPUT_DIRECTORY = ./example_output/
+# Where to store main output 
+OUTPUT_DIRECTORY = ./output/
 
 ---------------
 >kb191227_00111
@@ -15,8 +15,3 @@ OUTPUT_DIRECTORY = ./example_output/
 >kb191227_00114
 >kb191227_00116
 >kb191227_00117
-
-
-
-
-

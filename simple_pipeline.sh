@@ -30,12 +30,39 @@ cwi_coadd example.list -ctype icubes.c.wc.ps.fits -masks mcubes.c.wc.fits -var i
 # Again, we mask the same wavelengths to avoid over-fitting signal.
 cwi_bg_sub example_coadd.fits -method polyfit -poly_k 3 -var example_coadd.var.fits -mask_neb_z 2.49068 -mask_neb_dv 750 -wmask 4210:4270 5570:5585
 
-#Step 6A - Create source mask for the coadd based on our DS9 region file
+# Step 6A - Create source mask for the coadd based on our DS9 region file
 cwi_get_mask example.reg example_coadd.fits -out psf_mask.fits
 
-#Step 6B - Apply the mask to the data and variance
+# Step 6B - Apply the mask to the data and variance
 cwi_apply_mask psf_mask.fits example_coadd.ps.bs.fits
 cwi_apply_mask psf_mask.fits example_coadd.ps.bs.var.fits
 
-#Step 7 - Segment into regions above 2-sigma 
-cwi_segment
+# Step 7 - Segment into contiguous regions above 2-sigma, greater than 1000 voxels in size
+cwi_segment example_coadd.ps.bs.M.fits example_coadd.ps.bs.var.M.fits -snr_min 2.0 -n_min 1000
+
+# At this point, you would inspect the output cube (".obj.fits") and note the ID of objects,
+# e.g. "object 3 is a giant LyA nebula, object 10 appears to be CIV emission"
+#
+# Once you have an object ID - you can use the section below to generate data products
+# Just change the bash variables 'obj_id' and 'obj_label' to whatever you want
+
+obj_id=1
+obj_label="LyA"
+
+# Step 8A - Get an object surface brightness map
+cwi_obj_sb example_coadd.ps.bs.M.fits example_coadd.ps.bs.M.obj.fits $obj_id -var example_coadd.ps.bs.var.M.fits -ext $obj_label.fits
+
+# Step 8B - Get first and second moment maps (i.e. velocity and dispersion)
+cwi_obj_zmoments example_coadd.ps.bs.M.fits example_coadd.ps.bs.M.obj.fits $obj_id -var example_coadd.ps.bs.var.M.fits -ext $obj_label.fits
+
+# Step 8C- Get an integrated object spectrum
+cwi_obj_spec example_coadd.ps.bs.M.fits example_coadd.ps.bs.M.obj.fits $obj_id -var example_coadd.ps.bs.var.M.fits.fits -ext $obj_label.fits
+
+# Step 8D - Get a radial surface brightness profile of the object
+cwi_obj_rprof example_coadd.ps.bs.M.fits example_coadd.ps.bs.M.obj.fits $obj_id -var example_coadd.ps.bs.var.M.fits.fits -ext $obj_label.fits
+
+# Step 8E - Calculate the object luminosity
+cwi_obj_lum example_coadd.ps.bs.M.fits example_coadd.ps.bs.M.obj.fits $obj_id -var example_coadd.ps.bs.var.M.fits.fits -ext $obj_label.fits
+
+#Step 8F - Calculate the object radial extent and eccentricity
+cwi_obj_morpho example_coadd.ps.bs.M.fits example_coadd.ps.bs.M.obj.fits $obj_id -var example_coadd.ps.bs.var.M.fits.fits -ext $obj_label.fits
