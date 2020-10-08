@@ -48,8 +48,4 @@ cwi_scale_var example_coadd.ps.bs.M.fits  example_coadd.ps.bs.var.M.fits -snr_mi
 cwi_fit_covar example_coadd.ps.bs.M.fits example_coadd.ps.bs.var.M.fits -wrange 4300:5500
 
 #Step 8 - Segment the data into regions above a particular signal-to-noise ratio. Exclude sky line.
-cwi_segment example_coadd.ps.bs.M.fits example_coadd.ps.bs.var.M.fits -n_min 30 -snr_min 3 -exclude 5570:5585
-
-#
-# At this point,
-#
+cwi_segment example_coadd.ps.bs.M.fits example_coadd.ps.bs.var.M.fits -n_min 30 -snr_min 3 -include 4225:4260
