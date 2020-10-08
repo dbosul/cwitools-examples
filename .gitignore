@@ -130,3 +130,9 @@ dmypy.json
 
 #Intermediate local files
 .intermediate/
+
+#Newly created files
+.sample_data/*.c.fits
+.sample_data/*.wc.fits
+.sample_data/*.ps.fits
+example_coadd*fits
