@@ -19,9 +19,6 @@ cwi_measure_wcs example.list -ctype icubes.c.fits -xymode src_fit -radec 149.689
 cwi_apply_wcs example.wcs icubes.c.fits mcubes.c.fits vcubes.c.fits
 
 # Step 3 - Subtract the QSO from the input cubes
-# We mask nebular emission at a redshift z with a line-width of 750 km/s. We also mask the
-# wavelength ranges 4210A:4270A and 5570A:558A, which contain broad LyA and a sky line.
-# Masking these regions improves the empirical PSF model.
 cwi_psf_sub icubes.c.wc.fits -clist example.list -radec 149.689272107 47.056788021 -r_fit 1.0 -r_sub 5.0 -mask_neb_z 2.49068 -mask_neb_dv 750 -wmask 5390:5425 -var vcubes.c.wc.fits
 
 # Step 4A - Coadd the cropped, wcs-corrected data cubes
