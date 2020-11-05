@@ -11,10 +11,10 @@ from cwitools.scripts import *
 # Step 1 - Cropping the data cubes.
 cwi_crop(
     "example.list",
-    ctype=["icubes.fits", "mcubes.fits", "vcubes.fits"],
+    ctype=["icubes.fits", "mcubes.fits", "vcubes.fits", "ocubes.fits"],
     xcrop=(5, 28),
     ycrop=(15, 80),
-    wcrop=(4085, 6079)
+    wcrop=(5300, 5500)
 )
 
 # Step 2-A - Measure the coordinate system to create a 'WCS correction table'
@@ -42,7 +42,7 @@ cwi_psf_sub(
     r_sub=5.0,
     mask_neb_z=2.49068, #Masking nebular emission at a redshift of 2.49068
     mask_neb_dv=750, #Velocity width of nebular emission mask
-    wmask=[(4210, 4270), (5570, 5585)], #Masking broad LyA and a sky-line at ~5577A
+    wmask=[(5390, 5425)], #Manually masking CIV emission based on visual inspection
     var="vcubes.c.wc.fits"
 )
 
@@ -74,7 +74,7 @@ cwi_bg_sub(
     var="example_coadd.ps.var.fits",
     mask_neb_z=2.49068,
     mask_neb_dv=750,
-    wmask=[(4210, 4270), (5570, 5585)]
+    wmask=[(5390, 5425)]
 )
 
 #Step 6A - Create PSF mask for the coadd based on our DS9 region file
@@ -96,7 +96,7 @@ cwi_scale_var(
 cwi_fit_covar(
     "example_coadd.ps.bs.M.fits",
     "example_coadd.ps.bs.var.M.scaled.fits",
-    wrange=(4300, 5500),
+    wrange=(5300, 5500),
     xybins=range(1, 10),
     plot=True
 )
@@ -107,9 +107,49 @@ cwi_segment(
     "example_coadd.ps.bs.var.M.scaled.fits",
     n_min=100,
     snr_min=3,
-    include=[(4225, 4260)]
+    include=[(5380, 5435)]
 )
 
-#
-# At this point,
-#
+#Step 9 - Create data products for the object which should have been detected (Obj #1 - a giant LyA nebula)
+#9A - Surface brightness map
+cwi_obj_sb(
+    "example_coadd.ps.bs.M.fits", #Intensity cube
+    "example_coadd.ps.bs.M.obj.fits", #Object cube
+    1, #object ID
+    var="example_coadd.ps.bs.var.M.scaled.fits",
+    label="CIV"
+)
+
+#9B - Integrated spectrum
+cwi_obj_spec(
+    "example_coadd.ps.bs.M.fits", #Intensity cube
+    "example_coadd.ps.bs.M.obj.fits", #Object cube
+    1, #object ID
+    var="example_coadd.ps.bs.var.M.scaled.fits",
+    label="CIV"
+)
+
+#9C - Radial profile
+cwi_get_rprof(
+    "example_coadd.ps.bs.M.CIV_sb.fits", #CIV SB map
+    (149.689272107, 47.056788021), #Central coordinate
+    pos_type="radec",
+    r_min=20,
+    r_max=100,
+    r_unit="pkpc",
+    n_bins=10,
+    var="example_coadd.ps.bs.var.M.CIV_sb.var.fits",
+    redshift=2.49068
+)
+
+#9D - 2D Maps of kinematic moments, we use line-fitting here instead of statistical moments because CIV is a doublet
+cwi_obj_zfit(
+    "example_coadd.ps.bs.M.fits", #Intensity cube
+    "example_coadd.ps.bs.M.obj.fits", #Object cube
+    (1548, 1550), #Doublet peaks
+    obj_id=1,
+    redshift=2.49068,
+    unit="kms",
+    var="example_coadd.ps.bs.var.M.scaled.fits",
+    label="CIV"
+)
