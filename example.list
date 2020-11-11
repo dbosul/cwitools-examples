@@ -2,7 +2,7 @@ CWITools cube ID list
 ---------------
 
 # Location of input data - give one or more directories, separated by ';'
-DATA_DIRECTORY = ./sample_data/;./intermediate/
+DATA_DIRECTORY = ./sample_data/
 
 # Number of directory levels below 'DATA_DIRECTORY' to include in search
 SEARCH_DEPTH =  1
