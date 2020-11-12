@@ -160,7 +160,7 @@ if results or ALL:
         r_unit="pkpc",
         scale="log",
         n_bins=10,
-        var="example_coadd.ps.bs.var.M.CIV_sb.var.fits",
+        var="example_coadd.ps.bs.M.CIV_sb.var.fits",
         redshift=2.49068
     )
     #9D - Kinematic maps. We use line-fitting here because CIV is a doublet
