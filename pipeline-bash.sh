@@ -55,7 +55,7 @@ cwi_obj_sb example_coadd.ps.bs.M.fits example_coadd.ps.bs.M.obj.fits 1 -label CI
 cwi_obj_spec example_coadd.ps.bs.M.fits example_coadd.ps.bs.M.obj.fits 1 -label CIV -var example_coadd.ps.bs.var.M.scaled.fits
 
 #9C - Radial profile
-cwi_get_rprof example_coadd.ps.bs.M.CIV_sb.fits 149.689272107 47.056788021 -pos_type radec -r_min 20 -r_max 100 -n_bins 10 -r_unit pkpc -var example_coadd.ps.bs.M.CIV_sb.var.fits -redshift 2.49068
+cwi_get_rprof example_coadd.ps.bs.M.CIV_sb.fits 149.689272107 47.056788021 -pos_type radec -r_min 20 -r_max 100 -n_bins 10 -r_unit pkpc -scale lin -var example_coadd.ps.bs.M.CIV_sb.var.fits -redshift 2.49068
 
 #9D - 2D Maps of kinematic moments, we use line-fitting here instead of statistical moments because CIV is a doublet
-cwi_obj_zfit example_coadd.ps.bs.M.fits example_coadd.ps.bs.M.obj.fits 1548 1550 -obj_id 1 -redshift 2.49068 -unit kms -var example_coadd.ps.bs.var.M.scaled.fits
+cwi_obj_zfit example_coadd.ps.bs.M.fits example_coadd.ps.bs.M.obj.fits 1548 1550 -obj_id 1 -redshift 2.49068 -unit kms -var example_coadd.ps.bs.var.M.scaled.fits -label CIV
